@@ -1,7 +1,14 @@
 import React from 'react';
 
-const index = () => {
-  return <h1>af</h1>;
+const LandingPage = ({ color }) => {
+  console.log('In the component', color);
+  return <h1>Landing Page</h1>;
 };
 
-export default index;
+LandingPage.getInitialProps = () => {
+  console.log('On the server!');
+
+  return { color: 'red' };
+};
+
+export default LandingPage;
