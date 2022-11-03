@@ -41,7 +41,7 @@ const signup = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {errors.length > 0 && errors}
+      {errors}
       <button className='btn btn-primary mt-3'>Sign Up</button>
     </form>
   );
