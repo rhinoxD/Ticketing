@@ -16,9 +16,11 @@ spec:
         - name: tickets
           image: rhinoxd/tickets
           env:
+            - name: MONGO_URI
+              value: 'mongodb://tickets-mongo-srv:27017/tickets'
             - name: JWT_KEY
-              valueFrom: 
-                secretKeyRef: 
+              valueFrom:
+                secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
 ---
