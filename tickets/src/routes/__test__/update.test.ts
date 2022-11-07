@@ -34,6 +34,45 @@ it('returns a 401 if the user does not own the ticket', async () => {
     .expect(401);
 });
 
-it('returns a 400 if the user provides an invalid title or price', async () => {});
+it('returns a 400 if the user provides an invalid title or price', async () => {
+  const cookie = global.signin();
 
-it('updates the ticket provided valid input', async () => {});
+  const response = await request(app)
+    .post('/api/tickets/')
+    .set('Cookie', cookie)
+    .send({ title: 'asdasd', price: 20 });
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: '', price: 20 })
+    .expect(400);
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: 'asdsad', price: -20 })
+    .expect(400);
+});
+
+it('updates the ticket provided valid input', async () => {
+  const cookie = global.signin();
+
+  const response = await request(app)
+    .post('/api/tickets/')
+    .set('Cookie', cookie)
+    .send({ title: 'asdasd', price: 20 });
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: 'new title', price: 100 })
+    .expect(200);
+
+  const ticketReponse = await request(app)
+    .get(`/api/tickets/${response.body.id}`)
+    .send();
+
+  expect(ticketReponse.body.title).toEqual('new title');
+  expect(ticketReponse.body.price).toEqual(100);
+});
