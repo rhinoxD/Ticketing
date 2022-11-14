@@ -1,3 +1,6 @@
+import express, { Request, Response } from 'express';
+import mongoose from 'mongoose';
+import { body } from 'express-validator';
 import {
   BadRequestError,
   NotFoundError,
@@ -5,13 +8,13 @@ import {
   requireAuth,
   validateRequest,
 } from '@rxdtickets/common';
-import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
-import mongoose from 'mongoose';
-import { Order } from '../models/order';
+
 import { Ticket } from '../models/ticket';
+import { Order } from '../models/order';
 
 const router = express.Router();
+
+const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 router.post(
   '/api/orders',
@@ -40,12 +43,21 @@ router.post(
     }
 
     // Calculate an expiration date for this order
+    const expiration = new Date();
+    expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
 
     // Build the order and save it to the database
+    const order = Order.build({
+      userId: req.currentUser!.id,
+      status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
+    });
+    await order.save();
 
     // Publish an event saying that an order was created
 
-    res.send({});
+    res.status(201).send(order);
   }
 );
 
