@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
 import { Order } from '../../models/order';
+import { stripe } from '../../stripe';
 
 jest.mock('../../stripe');
 
@@ -72,5 +73,12 @@ it('returns a 204 with valid inputs', async () => {
   await request(app)
     .post('/api/payments')
     .set('Cookie', global.signin(userId))
-    .send({ token: 'pm_card_visa', orderId: order.id });
+    .send({ token: 'pm_card_visa', orderId: order.id })
+    .expect(201);
+
+  const chargeOptions = (stripe.paymentIntents.create as jest.Mock).mock
+    .calls[0][0];
+  expect(chargeOptions.payment_method).toEqual('pm_card_visa');
+  expect(chargeOptions.amount).toEqual(20 * 100);
+  expect(chargeOptions.currency).toEqual('usd');
 });
