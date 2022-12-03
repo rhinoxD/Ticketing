@@ -10,6 +10,7 @@ import {
 import { body } from 'express-validator';
 import { Order } from '../models/order';
 import { stripe } from '../stripe';
+import { Payment } from '../models/payment';
 
 const router = express.Router();
 
@@ -39,11 +40,17 @@ router.post(
     //   source: token,
     // });
 
-    await stripe.paymentIntents.create({
+    const paymentLink = await stripe.paymentIntents.create({
       amount: order.price * 100,
       currency: 'usd',
       payment_method: token,
     });
+
+    const payment = Payment.build({
+      orderId,
+      stripeId: paymentLink.id,
+    });
+    await payment.save();
 
     res.status(201).send({ success: true });
   }
