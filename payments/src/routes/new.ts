@@ -45,7 +45,7 @@ router.post(
     const paymentLink = await stripe.paymentIntents.create({
       amount: order.price * 100,
       currency: 'usd',
-      payment_method: token,
+      payment_method: 'pm_card_visa' || token,
       payment_method_types: ['card'],
     });
     console.log(paymentLink);
