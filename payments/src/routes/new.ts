@@ -46,6 +46,7 @@ router.post(
       amount: order.price * 100,
       currency: 'usd',
       payment_method: token,
+      payment_method_types: ['card'],
     });
     console.log(paymentLink);
 
