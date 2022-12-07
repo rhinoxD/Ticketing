@@ -28,7 +28,7 @@ const setup = async () => {
   return { listener, data, msg };
 };
 
-it('creates and save a ticket', async () => {
+it('creates and saves a ticket', async () => {
   const { listener, data, msg } = await setup();
 
   // call the onMessage function with the data object + message object
@@ -49,7 +49,6 @@ it('acks the message', async () => {
   await listener.onMessage(data, msg);
 
   // write assertions to make sure ack function is called
-  const ticket = await Ticket.findById(data.id);
 
   expect(msg.ack).toHaveBeenCalled();
 });

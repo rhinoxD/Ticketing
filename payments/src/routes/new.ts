@@ -48,8 +48,7 @@ router.post(
       payment_method: 'pm_card_visa' || token,
       payment_method_types: ['card'],
     });
-    console.log(paymentLink);
-
+    
     const payment = Payment.build({
       orderId,
       stripeId: paymentLink.id,

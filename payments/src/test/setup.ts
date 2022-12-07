@@ -12,7 +12,7 @@ let mongo: any;
 
 jest.mock('../nats-wrapper');
 
-process.env.STRIPE_KEY = process.env.STRIPE_KEY;
+process.env.STRIPE_KEY = 'sk_test_hnfrAm8rOkryFEnV23jjfFlw';
 
 beforeAll(async () => {
   process.env.JWT_KEY = 'wasd';

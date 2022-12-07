@@ -20,8 +20,8 @@ const setup = async () => {
 
   // create a fake data object
   const data: TicketUpdatedEvent['data'] = {
-    id: new mongoose.Types.ObjectId().toHexString(),
-    version: 0,
+    id: ticket.id,
+    version: ticket.version + 1,
     title: 'new concert',
     price: 99,
     userId: 'dsfsdfsdf',
